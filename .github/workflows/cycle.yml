@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: OnigiriBot
-          path: src\OnigiriBot\bin\Debug\net5.0
+          path: src\OnigiriBot\bin\Debug\net5.0-windows
       - name: Archive Automation artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -49,4 +49,4 @@ jobs:
           OnigiriBotToken: ${{ secrets.OnigiriBotToken }}
           OnigiriProxy: ${{ secrets.OnigiriProxy }}
           OnigiriLogo: ${{ secrets.OnigiriLogo }}
-        run: src\OnigiriBot\bin\Debug\net5.0\OnigiriBot.exe
+        run: .\src\OnigiriBot\bin\Debug\net5.0-windows\OnigiriBot.exe
