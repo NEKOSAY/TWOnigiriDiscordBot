@@ -1,0 +1,47 @@
+name: cycle 
+on:
+  push:
+    branches:
+    - main
+  schedule:
+    - cron :  '0 0/6 * * *'
+  workflow_dispatch:
+jobs:
+  discord:
+    runs-on: windows-latest
+    timeout-minutes: 4320
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout Onigiri Application
+        uses: actions/checkout@v2
+        with:
+          repository: NEKOSAY/Onigiri_TW
+          token: ${{ secrets.GitHubPAT }}
+          path: Onigiri_TW
+      - name: Setup .NET5
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+      - name: Restore
+        run: dotnet restore .\src
+      - name: Build
+        run: dotnet build .\src
+      - name: Archive Bot artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: exe
+          path: src\bin\Debug\net5.0
+      - name: RunClient
+        timeout-minutes: 4320
+        env:
+          OnigiriBotAdminGuild: ${{ secrets.OnigiriBotAdminGuild }}
+          OnigiriBotAdminGuildChannel: ${{ secrets.OnigiriBotAdminGuildChannel }}
+          OnigiriBotFirebaseSecret: ${{ secrets.OnigiriBotFirebaseSecret }}
+          OnigiriBotFirebaseUrl: ${{ secrets.OnigiriBotFirebaseUrl }}
+          OnigiriBotMongoClientServiceName: ${{ secrets.OnigiriBotMongoClientServiceName }}
+          OnigiriBotRealmsAppId: ${{ secrets.OnigiriBotRealmsAppId }}
+          OnigiriBotRealmsAppKey: ${{ secrets.OnigiriBotRealmsAppKey }}
+          OnigiriBotToken: ${{ secrets.OnigiriBotToken }}
+          OnigiriProxy: ${{ secrets.OnigiriProxy }}
+          OnigiriLogo: ${{ secrets.OnigiriLogo }}
+        run: .\src\bin\Debug\net5.0\OnigiriBot.exe
